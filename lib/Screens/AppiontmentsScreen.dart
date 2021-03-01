@@ -6,7 +6,7 @@ import 'package:lilacdcp/Screens/Home.dart';
 import 'package:lilacdcp/Screens/profile.dart';
 import 'package:lilacdcp/Screens/profilevieewdata.dart';
 import 'package:lilacdcp/uti/constants.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
 
@@ -48,7 +48,7 @@ class _AppointmentScreenState extends State<AppointmentScreen>
           ),
           BottomNavigationBarItem(
             // FontAwesomeIcons.user-md
-            icon: Icon(Icons.calendar_today,),
+            icon: Icon(FontAwesomeIcons.userMd,),
             title: Text('Doctor'),
           ),
           BottomNavigationBarItem(

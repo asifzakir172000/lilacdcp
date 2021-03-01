@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lilacdcp/Screens/DoctorListScreen.dart';
-import 'package:lilacdcp/apiwork/models/PatientDashboard.dart';
+import 'package:lilacdcp/apiwork/models/PatientDashboardModle.dart';
 import 'package:lilacdcp/uti/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lilacdcp/widgets/PatientDashboardItem.dart';
@@ -54,19 +54,19 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               // search
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                decoration: BoxDecoration(
-                    color: Colors.white, borderRadius: BorderRadius.circular(20)),
-                child: Container(
-                  color: Colors.white70,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Search pet to adopt'), Icon(Icons.search)],
-                  ),
-                ),
-              ),
+              // Container(
+              //   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              //   margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              //   decoration: BoxDecoration(
+              //       color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              //   child: Container(
+              //     color: Colors.white70,
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //       children: [Text('Search pet to adopt'), Icon(Icons.search)],
+              //     ),
+              //   ),
+              // ),
 
               //text 1
               Container(
@@ -81,102 +81,102 @@ class _HomeScreenState extends State<HomeScreen> {
 
               //upcomming booing design
 
-              // Expanded(
-              //                 child: Container(
-              //     child: PatientDashboardItem(),
-              //   ),
-              // )
-
-              Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    )),
-                    elevation: 2.0,
-                    child: InkWell(
-                      onTap: () {
-                        print('printing on past appoinment:->');
-                      },
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage:
-                                  AssetImage('assets/doc_image2.webp'),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Padding(
-                                      padding: const EdgeInsets.all(4),
-                                      child: Text(
-                                        'Dr. Rahul Sharma',
-                                        // parser.email,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      )),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                          padding: const EdgeInsets.all(4),
-                                          child: Text(
-                                            '11:00 AM',
-                                            // parser.email,
-                                            style: TextStyle(
-                                                fontSize: 14, color: Colors.grey),
-                                          )),
-                                      Container(
-                                        color: Colors.grey,
-                                        height: 15,
-                                        width: 1,
-                                      ),
-                                      Padding(
-                                          padding: const EdgeInsets.all(4),
-                                          child: Text(
-                                            '25-02-2021',
-                                            // parser.email,
-                                            style: TextStyle(
-                                                fontSize: 14, color: Colors.grey),
-                                          )),
-                                    ],
-                                  ),
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: Padding(
-                                        padding: const EdgeInsets.only(left: 8),
-                                        child: Icon(
-                                          Icons.videocam,
-                                          color: kPrimaryColor,
-                                        )),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+              Expanded(
+                  child: Container(
+                  child: UpComingWidget(),
                 ),
               )
+
+              // Container(
+              //   color: Colors.white,
+              //   child: Padding(
+              //     padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+              //     child: Card(
+              //       shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.all(
+              //         Radius.circular(10),
+              //       )),
+              //       elevation: 2.0,
+              //       child: InkWell(
+              //         onTap: () {
+              //           print('printing on past appoinment:->');
+              //         },
+              //         child: Row(
+              //           children: <Widget>[
+              //             Padding(
+              //               padding: const EdgeInsets.all(8),
+              //               child: CircleAvatar(
+              //                 backgroundColor: Colors.white,
+              //                 backgroundImage:
+              //                     AssetImage('assets/doc_image2.webp'),
+              //               ),
+              //             ),
+              //             Expanded(
+              //               child: Padding(
+              //                 padding: const EdgeInsets.all(8),
+              //                 child: Column(
+              //                   crossAxisAlignment: CrossAxisAlignment.start,
+              //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                   children: <Widget>[
+              //                     Padding(
+              //                         padding: const EdgeInsets.all(4),
+              //                         child: Text(
+              //                           'Dr. Rahul Sharma',
+              //                           // parser.email,
+              //                           style: TextStyle(
+              //                               fontSize: 16,
+              //                               color: Colors.black,
+              //                               fontWeight: FontWeight.bold),
+              //                         )),
+              //                     Row(
+              //                       children: [
+              //                         Padding(
+              //                             padding: const EdgeInsets.all(4),
+              //                             child: Text(
+              //                               '11:00 AM',
+              //                               // parser.email,
+              //                               style: TextStyle(
+              //                                   fontSize: 14, color: Colors.grey),
+              //                             )),
+              //                         Container(
+              //                           color: Colors.grey,
+              //                           height: 15,
+              //                           width: 1,
+              //                         ),
+              //                         Padding(
+              //                             padding: const EdgeInsets.all(4),
+              //                             child: Text(
+              //                               '25-02-2021',
+              //                               // parser.email,
+              //                               style: TextStyle(
+              //                                   fontSize: 14, color: Colors.grey),
+              //                             )),
+              //                       ],
+              //                     ),
+              //                     Align(
+              //                       alignment: Alignment.topRight,
+              //                       child: Padding(
+              //                           padding: const EdgeInsets.only(left: 8),
+              //                           child: Icon(
+              //                             Icons.videocam,
+              //                             color: kPrimaryColor,
+              //                           )),
+              //                     )
+              //                   ],
+              //                 ),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // )
 
               //text 2
               ,
               Container(
-                  margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   alignment: Alignment.topLeft,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

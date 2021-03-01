@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lilacdcp/Screens/AppiontmentsScreen.dart';
 import 'package:lilacdcp/Screens/LoginScreen.dart';
+import 'package:lilacdcp/Screens/jitsi.dart';
 import 'package:lilacdcp/Screens/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,8 +15,8 @@ Future<void> main() async {
         primarySwatch: Colors.purple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // home: MyVideoCall(),
-      home: LoginScreen(),
+      home: MyVideoCall(),
+      // home: LoginScreen(),
       routes: {
         '/p': (context) => ProfileScreen(),
         '/d': (context) => AppointmentScreen(),

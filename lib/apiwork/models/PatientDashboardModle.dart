@@ -1,17 +1,17 @@
 // To parse this JSON data, do
 //
-//     final patientDashboard = patientDashboardFromJson(jsonString);
+//     final patientDashboardModle = patientDashboardModleFromJson(jsonString);
 
 import 'dart:convert';
 
 import 'package:lilacdcp/Screens/dateconevt.dart';
 
-// List<PatientDashboard> patientDashboardFromJson(String str) => List<PatientDashboard>.from(json.decode(str).map((x) => PatientDashboard.fromJson(x)));
+// List<PatientDashboardModle> patientDashboardModleFromJson(String str) => List<PatientDashboardModle>.from(json.decode(str).map((x) => PatientDashboardModle.fromJson(x)));
 
-// String patientDashboardToJson(List<PatientDashboard> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+// String patientDashboardModleToJson(List<PatientDashboardModle> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class PatientDashboard {
-    PatientDashboard({
+class PatientDashboardModle {
+    PatientDashboardModle({
         this.timeSlot,
         this.id,
         this.userId,
@@ -41,7 +41,7 @@ class PatientDashboard {
     DateTime updatedAt;
     int v;
 
-    factory PatientDashboard.fromJson(Map<String, dynamic> json) => PatientDashboard(
+    factory PatientDashboardModle.fromJson(Map<String, dynamic> json) => PatientDashboardModle(
         timeSlot: TimeSlot.fromJson(json["time_slot"]),
         id: json["_id"],
         userId: json["user_id"],

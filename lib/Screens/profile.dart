@@ -207,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.black54,
               ),
               leading: Icon(
-                Icons.account_balance_wallet_outlined,
+                Icons.lock,
                 color: Colors.black54,
               ),
             ),
@@ -241,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.black54,
               ),
               leading: Icon(
-                Icons.rate_review_outlined,
+                Icons.phone,
                 color: Colors.black54,
               ),
             ),

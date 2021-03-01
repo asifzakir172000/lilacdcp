@@ -19,6 +19,7 @@ class _LoginState extends State<DoctorListScreen> {
   bool _loading = true;
   String email = "";
   bool _visible = false;
+  final nameController = TextEditingController();
 
   Future getEmail() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -28,7 +29,7 @@ class _LoginState extends State<DoctorListScreen> {
   }
 
   List<ListOfDoctors> doctors;
-  List<ListOfDoctors> filterDoctors=List<ListOfDoctors>();
+  List<ListOfDoctors> filterDoctors = List<ListOfDoctors>();
 
   Future<List<ListOfDoctors>> getDoctorData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,8 +46,11 @@ class _LoginState extends State<DoctorListScreen> {
           .toList();
       print("List converted Data:-> ${doctors.join("<>")}");
       _loading = false;
+      filterDoctors = doctors;
+      print("filterDoctors1  " + filterDoctors.toString());
+      print("filterDoctors2  " + doctors.toString());
     });
-    print("List"+response.body);
+    print("List" + response.body);
     return doctors;
   }
 
@@ -54,27 +58,40 @@ class _LoginState extends State<DoctorListScreen> {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: TextField(
-        decoration: InputDecoration(hintText: 'Search'),
-        onChanged: (text) {
-          text = text.toLowerCase();
-          setState(() {
-            filterDoctors=doctors.where((doctor) {
-              var textTiltle = doctor.name.firstName.toLowerCase();
-              return textTiltle.contains(text);
-            }).toList();
-          });
+        controller: nameController,
+        onChanged: (value) {
+          _filterMovies(value);
         },
+        style: TextStyle(color: Colors.black),
+        decoration: InputDecoration(
+            icon: Icon(
+              Icons.search,
+              color: Colors.black,
+            ),
+            hintText: "Search Doctor Here",
+            hintStyle: TextStyle(color: Colors.black)),
       ),
     );
+  }
+
+  void _filterMovies(value) {
+    setState(() {
+      filterDoctors = doctors
+          .where((country) =>
+              country.speciality.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+
+      print(value);
+      print(filterDoctors.toString());
+    });
   }
 
   @override
   void initState() {
     super.initState();
     this.getDoctorData();
-    setState(() {
-      filterDoctors=doctors;
-    });
+    // nameController.text = "genetic";
+    // _filterMovies("ge");
   }
 
   String docID = '';
@@ -82,156 +99,168 @@ class _LoginState extends State<DoctorListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [kPrimaryColor, Colors.purple[100]]),
+        appBar: AppBar(
+          backgroundColor: kPrimaryColor,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [kPrimaryColor, Colors.purple[100]]),
+            ),
+          ),
+          centerTitle: true,
+          elevation: 0.0,
+          title: Text(
+            "Doctor List",
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
-        centerTitle: true,
-        elevation: 0.0,
-        title: Text(
-          "Doctor List",
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-      ),
-      
-      body:
-        Container(
-          child:  Center(
-    child:_loading
-              ? CircularProgressIndicator()
-              :
+        body: Container(
+          child: Center(
+            child: _loading
+                ? CircularProgressIndicator()
+                : ListView.builder(
+                    itemCount: filterDoctors.length,
+                    itemBuilder: (context, index) {
+                      // ListOfDoctors parser=userData[index];
+                      final doc = filterDoctors[index];
+                      // _getDocId() async{
+                      //   SharedPreferences prefs = await SharedPreferences.getInstance();
+                      //   prefs.setString('docId', doc.id);
+                      //  docID = prefs.getString('docId');
+                      //   print(docID);
+                      // }
+                      String name;
+                                      if (doc.name.lastName == null) {
+                                        name = "Dr. " +doc.name.firstName;
+                                      } else {
+                                        name = "Dr. " +doc.name.firstName + " " + doc.name.lastName ;
+                                      }
 
-                ListView.builder(
-                  itemCount: doctors.length,
-                  itemBuilder: (context, index) {
-                    // ListOfDoctors parser=userData[index];
-                    final doc = doctors[index];
-                    // _getDocId() async{
-                    //   SharedPreferences prefs = await SharedPreferences.getInstance();
-                    //   prefs.setString('docId', doc.id);
-                    //  docID = prefs.getString('docId');
-                    //   print(docID);
-                    // }
-                    return index==0 ?_searchBar():Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                      child: Card(
-                          elevation: 1.0,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return Home(
-                                    doc.id, doc.name.firstName, doc.prefix);
-                              }));
-                              // print('tapping:->');
-                            },
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Image.network('${doc.profilePic}', height: 70, width: 70,)
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                      return index == 0
+                          ? _searchBar()
+                          : Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                              child: Card(
+                                  elevation: 1.0,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return Home(
+                                            doc.id, doc.speciality, name, doc.profilePic);
+                                      }));
+                                      // print('tapping:->');
+                                    },
+                                    child: Row(
                                       children: <Widget>[
                                         Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 10, left: 4),
-                                            child: Text(
-                                              '${doc.name.firstName} ${doc.name.lastName}',
-                                              // parser.email,
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold),
+                                            padding: const EdgeInsets.all(8),
+                                            child: Image.network(
+                                              '${doc.profilePic}',
+                                              height: 70,
+                                              width: 70,
                                             )),
-                                        Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 10, left: 4),
-                                            child: Text(
-                                              '${doc.speciality}',
-                                              // parser.email,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey,
-                                              ),
-                                            )),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              child: Row(
-                                                children: [
-                                                  Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4),
-                                                      child: Text(
-                                                        '${'Exp: '}${doc.experience}${' yrs'}',
-                                                        // parser.email,
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors.grey),
-                                                      )),
-                                                //   Container(
-                                                //     color: Colors.grey,
-                                                //     height: 15,
-                                                //     width: 1,
-                                                //   ),
-                                                //   Padding(
-                                                //       padding:
-                                                //           const EdgeInsets.all(
-                                                //               4),
-                                                //       child: Text(
-                                                //         '${'_endTime'}',
-                                                //         // parser.email,
-                                                //         style: TextStyle(
-                                                //             fontSize: 14,
-                                                //             color: Colors.grey),
-                                                //       )),
-                                                ],
-                                              ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 10, left: 4),
+                                                    child: Text(
+                                                      name,
+                                                      // parser.email,
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 10, left: 4),
+                                                    child: Text(
+                                                      '${doc.speciality}',
+                                                      // parser.email,
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    )),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Container(
+                                                      child: Row(
+                                                        children: [
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(4),
+                                                              child: Text(
+                                                                '${'Exp: '}${doc.experience}${' yrs'}',
+                                                                // parser.email,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    color: Colors
+                                                                        .grey),
+                                                              )),
+                                                          //   Container(
+                                                          //     color: Colors.grey,
+                                                          //     height: 15,
+                                                          //     width: 1,
+                                                          //   ),
+                                                          //   Padding(
+                                                          //       padding:
+                                                          //           const EdgeInsets.all(
+                                                          //               4),
+                                                          //       child: Text(
+                                                          //         '${'_endTime'}',
+                                                          //         // parser.email,
+                                                          //         style: TextStyle(
+                                                          //             fontSize: 14,
+                                                          //             color: Colors.grey),
+                                                          //       )),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    // Align(
+                                                    //   alignment: Alignment.topRight,
+                                                    //   child: Padding(
+                                                    //       padding:
+                                                    //           const EdgeInsets.only(
+                                                    //               left: 8, right: 8),
+                                                    //       child: Icon(
+                                                    //         Icons.videocam,
+                                                    //         color: kPrimaryColor,
+                                                    //       )),
+                                                    // )
+                                                  ],
+                                                ),
+                                              ],
                                             ),
-                                            // Align(
-                                            //   alignment: Alignment.topRight,
-                                            //   child: Padding(
-                                            //       padding:
-                                            //           const EdgeInsets.only(
-                                            //               left: 8, right: 8),
-                                            //       child: Icon(
-                                            //         Icons.videocam,
-                                            //         color: kPrimaryColor,
-                                            //       )),
-                                            // )
-                                          ],
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ),
-                              
-                                ],
-                            ),
-                          )),
-                    );
-                  }),
-
-        ),
-
-    ));
+                                  )),
+                            );
+                    }),
+          ),
+        ));
   }
   // ListView(
   // shrinkWrap: true,

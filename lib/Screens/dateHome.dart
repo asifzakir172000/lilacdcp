@@ -14,8 +14,10 @@ class Home extends StatefulWidget {
   final String id;
   final String dctrspeciality;
   final String dctrname;
+  final String pro;
+  
 
-  const Home(this.id, this.dctrspeciality, this.dctrname);
+  const Home(this.id, this.dctrspeciality, this.dctrname, this.pro);
 
   @override
   _HomeState createState() => _HomeState();
@@ -109,314 +111,332 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kPrimaryColor,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [kPrimaryColor, Colors.purple[100]]),
+          ),
+        ),
+        centerTitle: true,
+        elevation: 0.0,
+        title: Text(
+          "My Bookings",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      ),
+
         body: SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(height: 10),
-          //doctor profile code
-          Container(
-            child: Column(children: [
-              SizedBox(height: 20.0),
-              CircleAvatar(
-                backgroundColor: Color(0xFF8e539c),
-                maxRadius: 50.0,
-              ),
-              SizedBox(height: 10.0),
-              Center(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(widget.dctrspeciality,
-                      style: TextStyle(
-                          fontFamily: 'poppins_regular',
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold)),
-                  Text(widget.dctrname,
-                      style: TextStyle(
-                          fontFamily: 'poppins_regular',
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold)),
-                ],
-              ))
-            ]),
-          ),
-          SizedBox(height: 30.0),
+      child: Container(
+        color: Colors.white,
+        margin: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            //doctor profile code
+            Container(
+              child: Column(children: [
+                SizedBox(height: 20.0),
+                Image.network(widget.pro, height: 150, width: 150,),
+                SizedBox(height: 20.0),
+                Center(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(widget.dctrname,
+                        style: TextStyle(
+                            fontFamily: 'poppins_regular',
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold)),
+                            SizedBox(height: 10),
+                    Text(widget.dctrspeciality,
+                        style: TextStyle(
+                            fontFamily: 'poppins_regular',
+                            fontSize: 15,)),
+                  ],
+                ))
+              ]),
+            ),
+            SizedBox(height: 30.0),
 
-          Container(
-            margin: EdgeInsets.all(10),
-            alignment: Alignment.topLeft,
-            child: Padding(
-                padding: const EdgeInsets.all(4),
-                child: Text(
-                  'Select Date',
-                  // parser.email,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'poppins_regular',
-                      color: Colors.black),
-                )),
-          ),
+            Container(
+              margin: EdgeInsets.all(10),
+              alignment: Alignment.topLeft,
+              child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(
+                    'Select Date',
+                    // parser.email,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'poppins_regular',
+                        color: Colors.black),
+                  )),
+            ),
 
-          Center(
-              child: Container(
-                  height: 50,
-                  child: _loading
-                      ? CircularProgressIndicator()
-                      : ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: times == null ? 0 : times.length,
-                          itemBuilder: (context, index) {
-                            final cat = times[index];
-                            // setState(() {
-                            //   if(first == 0){
-                            //     slots = cat.timeSlots;
-                            //   }
-                            // });
-                            return Container(
-                              margin: const EdgeInsets.all(8),
-                              child: FlatButton(
-                                  color: mainIndex == index
+            Center(
+                child: Container(
+                    height: 50,
+                    child: _loading
+                        ? CircularProgressIndicator()
+                        : ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: times == null ? 0 : times.length,
+                            itemBuilder: (context, index) {
+                              final cat = times[index];
+                              // setState(() {
+                              //   if(first == 0){
+                              //     slots = cat.timeSlots;
+                              //   }
+                              // });
+                              return Container(
+                                margin: const EdgeInsets.all(8),
+                                child: FlatButton(
+                                    color: mainIndex == index
+                                        ? kPrimaryColor
+                                        : null,
+                                    child: Text(
+                                      cat.date,
+                                      style: TextStyle(
+                                          color: mainIndex == index
+                                              ? Colors.white
+                                              : Colors.black),
+                                    ),
+                                    onPressed: () async {
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      setState(() {
+                                        slots = cat.timeSlots;
+                                      });
+                                      print("p = $slots");
+                                      prefs.setString('datesp', cat.date);
+                                      showCurrentIndexData(index);
+                                      print(
+                                          '${'printing current date'}${cat.date}');
+                                    }),
+                              );
+                            }))),
+            SizedBox(height: 10),
+
+            Container(
+              margin: EdgeInsets.all(10),
+              alignment: Alignment.topLeft,
+              child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(
+                    'Select Time',
+                    // parser.email,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'poppins_regular',
+                        color: Colors.black),
+                  )),
+            ),
+
+            Center(
+              child: _loading
+                  ? CircularProgressIndicator()
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: GridView.builder(
+                            shrinkWrap: true,
+                            gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4,
+                                childAspectRatio: 5/2,crossAxisSpacing: 2,mainAxisSpacing: 2),
+                            itemCount: slots == null ? 0 : slots.length,
+                            itemBuilder: (context, index) {
+                              return FlatButton(
+                                  color: subIndex == index
                                       ? kPrimaryColor
                                       : null,
-                                  child: Text(
-                                    cat.date,
-                                    style: TextStyle(
-                                        color: mainIndex == index
-                                            ? Colors.white
-                                            : Colors.black),
-                                  ),
                                   onPressed: () async {
                                     SharedPreferences prefs =
                                         await SharedPreferences.getInstance();
-                                    setState(() {
-                                      slots = cat.timeSlots;
-                                    });
-                                    print("p = $slots");
-                                    prefs.setString('datesp', cat.date);
-                                    showCurrentIndexData(index);
-                                    print(
-                                        '${'printing current date'}${cat.date}');
-                                  }),
-                            );
-                          }))),
-          SizedBox(height: 30),
-
-          Container(
-            margin: EdgeInsets.all(10),
-            alignment: Alignment.topLeft,
-            child: Padding(
-                padding: const EdgeInsets.all(4),
-                child: Text(
-                  'Select Time',
-                  // parser.email,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'poppins_regular',
-                      color: Colors.black),
-                )),
-          ),
-
-          Center(
-            child: _loading
-                ? CircularProgressIndicator()
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: GridView.builder(
-                          shrinkWrap: true,
-                          gridDelegate:
-                              new SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 4),
-                          itemCount: slots == null ? 0 : slots.length,
-                          itemBuilder: (context, index) {
-                            return FlatButton(
-                                color: subIndex == index
-                                    ? kPrimaryColor
-                                    : null,
-                                onPressed: () async {
-                                  SharedPreferences prefs =
-                                      await SharedPreferences.getInstance();
-                                  prefs.setString('timeslot', slots[index]);
-                                  showCurrentSubIndexData(index);
-                                  // setState(() {
-                                  //   print(slots[index]);
-                                  // });
-                                },
-                                child: Text(
-                                  slots[index],
-                                  style: TextStyle(
-                                      color: subIndex == index
-                                          ? Colors.white
-                                          : Colors.black),
-                                ));
-                          }),
-                    ),
-                  ),
-            // :DropdownButton<String>(
-            //     hint: Text(
-            //       'Please select time slot',
-            //       style: TextStyle(fontSize: 13),
-            //     ),
-            //     items:
-            //         times[mainIndex].timeSlots.map((String value) {
-            //       return new DropdownMenuItem<String>(
-            //         onTap: () async {
-            //           SharedPreferences prefs =
-            //               await SharedPreferences.getInstance();
-            //           prefs.setString('timeslot', value);
-            //           print('printg now real $value ');
-            //         },
-            //         value: value,
-            //         child: Text(value,
-            //             style: TextStyle(
-            //                 fontSize: 14.0,
-            //                 fontWeight: FontWeight.w700,
-            //                 color: Colors.black)),
-            //       );
-            //     }).toList(),
-            //     onChanged: (_) {
-            //       print('near of project');
-            //     },
-            //   ),
-          ),
-          SizedBox(height: 40),
-
-          //two buttons in same line
-
-          Container(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.all(10),
-                    child: RaisedButton(
-                      color: kPrimaryColor,
-                      child: Ink(
-                        child: Container(
-                          constraints:
-                              BoxConstraints(maxWidth: 350.0, minHeight: 50.0),
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Add Family Member",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: 15),
-                          ),
-                        ),
+                                    prefs.setString('timeslot', slots[index]);
+                                    showCurrentSubIndexData(index);
+                                    // setState(() {
+                                    //   print(slots[index]);
+                                    // });
+                                  },
+                                  child: Text(
+                                    slots[index],
+                                    style: TextStyle(
+                                        color: subIndex == index
+                                            ? Colors.white
+                                            : Colors.black),
+                                  ));
+                            }),
                       ),
-                      onPressed: () => {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)  {
-                  return AddFamily();
-                }))
-                      },
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.all(10),
-                    child: RaisedButton(
-                      color: kPrimaryColor,
-                      child: Ink(
-                        child: Container(
-                          constraints:
-                              BoxConstraints(maxWidth: 350.0, minHeight: 50.0),
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Fill Questionnaire",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: 15),
-                          ),
-                        ),
-                      ),
-                      onPressed: () => {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)  {
-                  return FillQuestionnaire();
-                }))
-                      },
-                    ),
-                  ),
-                )
-              ],
+              // :DropdownButton<String>(
+              //     hint: Text(
+              //       'Please select time slot',
+              //       style: TextStyle(fontSize: 13),
+              //     ),
+              //     items:
+              //         times[mainIndex].timeSlots.map((String value) {
+              //       return new DropdownMenuItem<String>(
+              //         onTap: () async {
+              //           SharedPreferences prefs =
+              //               await SharedPreferences.getInstance();
+              //           prefs.setString('timeslot', value);
+              //           print('printg now real $value ');
+              //         },
+              //         value: value,
+              //         child: Text(value,
+              //             style: TextStyle(
+              //                 fontSize: 14.0,
+              //                 fontWeight: FontWeight.w700,
+              //                 color: Colors.black)),
+              //       );
+              //     }).toList(),
+              //     onChanged: (_) {
+              //       print('near of project');
+              //     },
+              //   ),
             ),
-          ),
+            SizedBox(height: 40),
 
-          SizedBox(height: 40),
-          Container(
-            height: 50.0,
-            child: RaisedButton(
-              onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                var timeslotsp = prefs.getString('timeslot');
-                var getdatesp = prefs.getString('datesp');
-                print('time slotdata now printing:-> $timeslotsp');
-                print('date slot data now printing:-> $getdatesp');
-                // _onAppoinmentScreen();
-                var rsp = await bookingApp(timeslotsp, getdatesp);
-                print(rsp);
-                bookingApp(timeslotsp, getdatesp);
-                if (rsp['status'] == 'success') {
-                  _showAlertDailog('Message', 'Booking Done Successfully');
-                } else {
-                  _showAlertDailog('Message', 'Booking Fail');
-                }
-                print('on pressed working on button:->');
-              },
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(80.0)),
-              padding: EdgeInsets.all(0.0),
-              child: Ink(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [kPrimaryColor, Colors.purple[100]],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
+            //two buttons in same line
+
+            Container(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.all(10),
+                      child: RaisedButton(
+                        color: kPrimaryColor,
+                        child: Ink(
+                          child: Container(
+                            constraints:
+                                BoxConstraints(maxWidth: 350.0, minHeight: 50.0),
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Add Family Member",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () => {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)  {
+                    return AddFamily();
+                  }))
+                        },
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(30.0)),
-                child: Container(
-                  constraints: BoxConstraints(maxWidth: 350.0, minHeight: 50.0),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Book appoinment",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.all(10),
+                      child: RaisedButton(
+                        color: kPrimaryColor,
+                        child: Ink(
+                          child: Container(
+                            constraints:
+                                BoxConstraints(maxWidth: 350.0, minHeight: 50.0),
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Fill Questionnaire",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () => {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)  {
+                    return FillQuestionnaire();
+                  }))
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            SizedBox(height: 40),
+            Container(
+              height: 50.0,
+              child: RaisedButton(
+                onPressed: () async {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  var timeslotsp = prefs.getString('timeslot');
+                  var getdatesp = prefs.getString('datesp');
+                  print('time slotdata now printing:-> $timeslotsp');
+                  print('date slot data now printing:-> $getdatesp');
+                  // _onAppoinmentScreen();
+                  var rsp = await bookingApp(timeslotsp, getdatesp);
+                  print(rsp);
+                  bookingApp(timeslotsp, getdatesp);
+                  if (rsp['status'] == 'success') {
+                    _showAlertDailog('Message', 'Booking Done Successfully');
+                  } else {
+                    _showAlertDailog('Message', 'Booking Fail');
+                  }
+                  print('on pressed working on button:->');
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(80.0)),
+                padding: EdgeInsets.all(0.0),
+                child: Ink(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [kPrimaryColor, Colors.purple[100]],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(30.0)),
+                  child: Container(
+                    constraints: BoxConstraints(maxWidth: 350.0, minHeight: 50.0),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Book appoinment",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 40),
-          // SizedBox(height: 20),
-          // Padding(
-          //     padding: const EdgeInsets.all(12),
-          //     child: RaisedButton(
-          //       onPressed: () async {
-          //         // _showAlertDailog('Message', 'Booking Done Successfully');
-          //         // var rsp = await bookingApp(timeslotsp, getdatesp);
-          //         // print(rsp);
-          //         SharedPreferences prefs =
-          //             await SharedPreferences.getInstance();
-          //         var timeslotsp = prefs.getString('timeslot');
-          //         var getdatesp = prefs.getString('datesp');
-          //         print('time slotdata now printing:-> $timeslotsp');
-          //         print('date slot data now printing:-> $getdatesp');
-          //         // _onAppoinmentScreen();
-          //         var rsp = await bookingApp(timeslotsp, getdatesp);
-          //         print(rsp);
-          //         bookingApp(timeslotsp, getdatesp);
-          //         if (rsp['status'] == 'success') {
-          //           _showAlertDailog('Message', 'Booking Done Successfully');
-          //         } else {
-          //           _showAlertDailog('Message', 'Booking Fail');
-          //         }
-          //         print('on pressed working on button:->');
-          //       },
-          //       child: Text('Book appoinment',
-          //           style: TextStyle(fontFamily: 'poppins_regular')),
-          //       textColor: Colors.white,
-          //       color: Colors.purple,
-          //     ))
-        ],
+            SizedBox(height: 40),
+            // SizedBox(height: 20),
+            // Padding(
+            //     padding: const EdgeInsets.all(12),
+            //     child: RaisedButton(
+            //       onPressed: () async {
+            //         // _showAlertDailog('Message', 'Booking Done Successfully');
+            //         // var rsp = await bookingApp(timeslotsp, getdatesp);
+            //         // print(rsp);
+            //         SharedPreferences prefs =
+            //             await SharedPreferences.getInstance();
+            //         var timeslotsp = prefs.getString('timeslot');
+            //         var getdatesp = prefs.getString('datesp');
+            //         print('time slotdata now printing:-> $timeslotsp');
+            //         print('date slot data now printing:-> $getdatesp');
+            //         // _onAppoinmentScreen();
+            //         var rsp = await bookingApp(timeslotsp, getdatesp);
+            //         print(rsp);
+            //         bookingApp(timeslotsp, getdatesp);
+            //         if (rsp['status'] == 'success') {
+            //           _showAlertDailog('Message', 'Booking Done Successfully');
+            //         } else {
+            //           _showAlertDailog('Message', 'Booking Fail');
+            //         }
+            //         print('on pressed working on button:->');
+            //       },
+            //       child: Text('Book appoinment',
+            //           style: TextStyle(fontFamily: 'poppins_regular')),
+            //       textColor: Colors.white,
+            //       color: Colors.purple,
+            //     ))
+          ],
+        ),
       ),
     ));
   }

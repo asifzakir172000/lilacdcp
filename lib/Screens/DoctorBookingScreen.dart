@@ -108,7 +108,7 @@ class _BookingScreenState extends State<BookingScreen> {
           ),
         ),
       ),
-      body: Home(widget.id, widget.dctrspeciality, widget.dctrname),
+      // body: Home(widget.id, widget.dctrspeciality, widget.dctrname,),
     );
     // SingleChildScrollView(
     //     child:

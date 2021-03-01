@@ -2,11 +2,9 @@ import 'package:lilacdcp/uti/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lilacdcp/Screens/dateHome.dart';
 import 'package:lilacdcp/apiwork/models/ListOfDoctor.dart';
-import 'package:lilacdcp/widgets/star.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'dart:convert';
 
 class DoctorItem extends StatefulWidget {
@@ -64,6 +62,12 @@ class _DoctorItemState extends State<DoctorItem> {
                     //  docID = prefs.getString('docId');
                     //   print(docID);
                     // }
+                    String name;
+                                      if (doc.name.lastName == null) {
+                                        name = "Dr. " +doc.name.firstName;
+                                      } else {
+                                        name = "Dr. " +doc.name.firstName + " " + doc.name.lastName ;
+                                      }
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                       child: Card(
@@ -73,7 +77,7 @@ class _DoctorItemState extends State<DoctorItem> {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return Home(
-                                    doc.id, doc.name.firstName, doc.prefix);
+                                    doc.id, doc.speciality, name, doc.profilePic);
                               }));
                               // print('tapping:->');
                             },
@@ -99,7 +103,7 @@ class _DoctorItemState extends State<DoctorItem> {
                                             padding: const EdgeInsets.only(
                                                 top: 10, left: 4),
                                             child: Text(
-                                              '${doc.name.firstName} ${doc.name.lastName}',
+                                              name,
                                               // parser.email,
                                               style: TextStyle(
                                                   fontSize: 16,
